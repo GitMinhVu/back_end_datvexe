@@ -13,6 +13,8 @@ const createComment = async (req, res) => {
 		res.status(500).send(error);
 	}
 };
+
+// findALL: trả ra tất cả các phần tử object và ném vào mảng
 const getAllComment = async (req, res) => {
 	const {passengerId} = req.query;
 	try {
@@ -137,7 +139,10 @@ const updateComment = async (req, res) => {
 	const {content, userId, passengerId} = req.body;
 	try {
 		await Comment.update(
+			//ts1: các phần tử muốn update
 			{content, userId, passengerId},
+			//điều kiện để tìm kiếm
+
 			{
 				where: {
 					id,
