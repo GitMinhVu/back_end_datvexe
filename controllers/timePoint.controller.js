@@ -115,6 +115,45 @@ const GetTimePointDetail = async (req, res) => {
 	}
 };
 
+// Thêm hàm kiểm tra thời gian hợp lệ
+const validateTime = (time) => {
+	// Kiểm tra định dạng HH:MM:SS
+	const timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
+	return timeRegex.test(time);
+};
+
+// Trong hàm xử lý tạo TimePoint
+exports.createTimePoint = async (req, res) => {
+	try {
+		const { time, type, pointId, tripPassengerId } = req.body;
+		
+		// Kiểm tra time trước khi tạo
+		if (!validateTime(time)) {
+			return res.status(400).json({
+				success: false,
+				message: "Thời gian không hợp lệ. Vui lòng sử dụng định dạng HH:MM:SS và đảm bảo giây không vượt quá 59"
+			});
+		}
+
+		const timePoint = await TimePoint.create({
+			time,
+			type,
+			pointId,
+			tripPassengerId
+		});
+
+		return res.status(201).json({
+			success: true,
+			data: timePoint
+		});
+	} catch (error) {
+		return res.status(500).json({
+			success: false,
+			message: error.message
+		});
+	}
+};
+
 module.exports = {
 	getTimePointByTrip,
 	CreateTimePointByTrip,

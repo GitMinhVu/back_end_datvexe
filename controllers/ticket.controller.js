@@ -721,11 +721,23 @@ const bookingTicket = async (req, res) => {
 					await seatUpdate.save();
 				});
 			}
-			res.status(200).send("Đặt vé thành công");
+					// res.status(200).send("Đặt vé thành công")
+
+			return res.status(200).json({
+				success: true,
+				message: "Đặt vé thành công"
+			});
 		}
-		res.status(404).send("Đặt vé không thành công");
+		// res.status(404).send("Đặt vé không thành công")
+		return res.status(404).json({
+			success: false,
+			message: "Đặt vé không thành công"
+		});
 	} catch (error) {
-		res.status(500).send(error);
+		return res.status(500).json({
+			success: false,
+			message: error.message
+		});
 	}
 };
 module.exports = {
