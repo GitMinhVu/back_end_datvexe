@@ -1,3 +1,5 @@
+const { default: axios } = require("axios");
+
 const paymentController = async (req1, res2) => {
 	const {totalAmount, passenger} = req1.body;
 	try {
@@ -42,6 +44,7 @@ const paymentController = async (req1, res2) => {
 			signature: signature,
 			lang: "en",
 		});
+
 		const options = {
 			hostname: "test-payment.momo.vn", //Địa chỉ API (dùng môi trường test là test-payment.momo.vn).
 			port: 443,
@@ -53,7 +56,7 @@ const paymentController = async (req1, res2) => {
 			},
 		};
 		const https = require("https");
-//Send the request and get the response
+		//Send the request and get the response
 
 		const req = https.request(options, (res) => {
 			console.log(`Status: ${res.statusCode}`);
@@ -73,14 +76,17 @@ const paymentController = async (req1, res2) => {
 		req.on("error", (e) => {
 			console.log(`problem with request: ${e.message}`);
 		});
-		// write data to request body
+	//	write data to request body
 		console.log("Sending....");
 		req.write(requestBody);
 		req.end();
 	} catch (error) {}
 
-	// write data to request body
+	//write data to request body
 };
+
 module.exports = {
 	paymentController,
 };
+
+
