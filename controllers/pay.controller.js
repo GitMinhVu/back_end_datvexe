@@ -7,7 +7,7 @@ const paymentController = async (req1, res2) => {
 		var requestId = partnerCode + new Date().getTime();
 		var orderId = requestId;
 		var orderInfo = `Đặt vé xe nhà xe ${passenger.name}`;
-		var redirectUrl = "http://localhost:3000/";
+		var redirectUrl = "http://localhost:3000/"; //URL mà MoMo sẽ chuyển hướng người dùng sau khi thanh toán.
 		var ipnUrl = "https://callback.url/notify";
 		// var ipnUrl = redirectUrl = "https://webhook.site/454e7b77-f177-4ece-8236-ddf1c26ba7f8";
 		var amount = totalAmount;
@@ -22,9 +22,12 @@ const paymentController = async (req1, res2) => {
 		console.log(rawSignature);
 		//signature
 		const crypto = require("crypto");
+		//chữ ký mã hóa sha256
 		var signature = crypto.createHmac("sha256", secretkey).update(rawSignature).digest("hex");
 		console.log("--------------------SIGNATURE----------------");
 		console.log(signature);
+		//json object send to MoMo endpoint
+		//Tạo yêu cầu thanh toán và gửi tới MoMo
 		const requestBody = JSON.stringify({
 			partnerCode: partnerCode,
 			accessKey: accessKey,
@@ -40,7 +43,7 @@ const paymentController = async (req1, res2) => {
 			lang: "en",
 		});
 		const options = {
-			hostname: "test-payment.momo.vn",
+			hostname: "test-payment.momo.vn", //Địa chỉ API (dùng môi trường test là test-payment.momo.vn).
 			port: 443,
 			path: "/v2/gateway/api/create",
 			method: "POST",
@@ -50,6 +53,7 @@ const paymentController = async (req1, res2) => {
 			},
 		};
 		const https = require("https");
+//Send the request and get the response
 
 		const req = https.request(options, (res) => {
 			console.log(`Status: ${res.statusCode}`);
