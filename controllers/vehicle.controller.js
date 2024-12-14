@@ -12,7 +12,9 @@ const createVehicles = async (req, res) => {
 		});
 		res.status(201).send(newVehicles);
 	} catch (error) {
-		res.status(500).send(error);
+		// res.status(500).send(error);
+		console.error("Error creating vehicle:", error);
+        res.status(500).send({ message: "Lỗi khi tạo xe", error });
 	}
 };
 const getAllVehicles = async (req, res) => {
