@@ -2,6 +2,7 @@ const {User, sequelize} = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const {Op} = require("sequelize");
+
 const getAllUser = async (req, res) => {
 	const {name} = req.query;
 	try {
@@ -138,7 +139,7 @@ const login = async (req, res) => {
 	if (user) {
 		const isAuth = bcrypt.compareSync(password, user.password);
 		if (isAuth) {
-			const token = jwt.sign({email: user.email, type: user.type}, "phu2000", {expiresIn: "365d"});
+			const token = jwt.sign({email: user.email, type: user.type}, "vu2002", {expiresIn: "365d"});
 			res.status(200).send({message: "Đăng nhập thành công", token: token, user});
 		} else {
 			res.status(404).send({message: "Mật khẩu không đúng!"});

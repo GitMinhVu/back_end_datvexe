@@ -503,6 +503,14 @@ data = [
     phone_code: 290,
     districts: [],
   },
+  {
+    name: "Tỉnh Bình Định",
+    code: 97,
+    division_type: "tỉnh",
+    codename: "tinh_binh_dinh",
+    phone_code: 293,
+    districts: [],
+  },
 ];
 
 module.exports = {

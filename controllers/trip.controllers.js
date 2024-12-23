@@ -77,6 +77,7 @@ const getDetailTrip = async (req, res) => {
 		res.status(500).send(error);
 	}
 };
+
 const deleteTrip = async (req, res) => {
 	const {id} = req.params;
 	try {
@@ -90,6 +91,7 @@ const deleteTrip = async (req, res) => {
 		res.status(500).send(error);
 	}
 };
+
 const updateTrip = async (req, res) => {
 	const {id} = req.params;
 	const {fromStation, toStation, startTime, price} = req.body;

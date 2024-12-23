@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.STRING,
 				validate: {
 					checkLen(value) {
-						if (value.length > 5 && value.length <= 50) {
+						if (value.length > 5 && value.length <= 200) {
 							return true;
 						} else {
 							throw new Error("Độ dài phải lớn hơn 5 và nhỏ hơn 50");

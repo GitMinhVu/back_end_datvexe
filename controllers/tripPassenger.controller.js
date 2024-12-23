@@ -4,10 +4,13 @@ const {Op} = require("sequelize");
 const getAllTripPassengerNew = async (req, res) => {
 	try {
 		const [result] = await sequelize.query(
-			`select * from trippassengers,trips,passengercarcompanies,vehicles ,imagevehicles
-      where  trippassengers.tripId = trips.id and
-      passengercarcompanies.id = trippassengers.passengerId and vehicles.id = trippassengers.vehicleId and imagevehicles.vehicleId = vehicles.id
-      and trippassengers.tripId = 2 ;`
+			`select * 
+			from trippassengers,trips,passengercarcompanies,vehicles ,imagevehicles
+      		where  trippassengers.tripId = trips.id 
+			and
+      		passengercarcompanies.id = trippassengers.passengerId and vehicles.id = trippassengers.vehicleId and imagevehicles.vehicleId = vehicles.id
+      		and 
+			trippassengers.tripId = 2 ;`
 		);
 		res.status(200).send(result);
 	} catch (error) {
