@@ -128,7 +128,10 @@ const updateImagePassenger = async (req, res) => {
 	const {file} = req;
 	const protocol = req.protocol;
 	const host = req.headers.host;
-	const fullUrlImages = `${protocol}://${host}/${file.path}`;
+	let fullUrlImages = "";
+	if (req.file) {
+		fullUrlImages = `${protocol}://${host}/${req.file.path}`;
+	}
 	try {
 		await PassengerCarCompany.update(
 			{imageIntro: fullUrlImages},
