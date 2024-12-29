@@ -13,6 +13,7 @@ const {tripRouter} = require("./trip.routers");
 const {tripPassengerRouter} = require("./tripPassenger.routers");
 const {userRouter} = require("./user.routers");
 const {VehiclesRouter} = require("./vehicles.routers");
+const {adminRouter} = require("./admin.routers");
 const rootRouter = express.Router();
 
 rootRouter.use("/stations", stationRouter);
@@ -29,6 +30,7 @@ rootRouter.use("/rate", RateRouter);
 rootRouter.use("/timepoint", TimePointRouter);
 rootRouter.use("/point", PointRouter);
 rootRouter.use("/payment", PaymentRouter);
+rootRouter.use("/", adminRouter);
 
 module.exports = {
 	rootRouter,
