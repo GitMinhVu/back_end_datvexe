@@ -27,7 +27,18 @@ const createTrip = async (req, res) => {
 const getAllTripByUser = async (req, res) => {
 	const {fromStation, toStation, startTime} = req.body;
 	try {
-		const [result] = await sequelize.query(`select trips.*,fromSta.province as fromSta,toSta.province as toSta from trips inner join stations as fromSta on trips.fromStation = fromSta.id inner join stations as toSta on trips.toStation = toSta.id where fromSta.province like "%${fromStation}" and toSta.province like "%${toStation}" and trips.startTime like "${startTime}%"`);
+		// const [result] = await sequelize.query(`select trips.*,fromSta.province as fromSta,toSta.province as toSta from trips inner join stations as fromSta on trips.fromStation = fromSta.id inner join stations as toSta on trips.toStation = toSta.id where fromSta.province like "%${fromStation}" and toSta.province like "%${toStation}" and trips.startTime like "${startTime}%"`);
+
+		const [result] = await sequelize.query(
+			`select trips.*,fromSta.province as fromSta,toSta.province as toSta 
+			 from trips 
+			 inner join stations as fromSta on trips.fromStation = fromSta.id 
+			 inner join stations as toSta on trips.toStation = toSta.id 
+			 where fromSta.province = '${fromStation}'
+			 and toSta.province = '${toStation}' 
+			 and DATE(trips.startTime) = '${startTime}'
+			 order by trips.startTime`
+		);
 		res.status(200).send(result);
 	} catch (error) {
 		res.status(500).send(error);
