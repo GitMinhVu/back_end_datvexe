@@ -1,12 +1,15 @@
 const express = require("express");
 const {User} = require("../models");
-const {register, login, uploadAvatar, getAllTrip, getAllUser, getDetailUser, updateUser, deleteUser, updateUserBooking} = require("../controllers/user.controllers");
+const {register, login, uploadAvatar, getAllTrip, getAllUser, getDetailUser, updateUser, deleteUser, updateUserBooking, forgotPassword, resetPassword} = require("../controllers/user.controllers");
 const {checkExist} = require("../middlewares/validations/checkExist");
 const {uploadImage} = require("../middlewares/upload/uploadImages");
 const {authenticate} = require("../middlewares/auth/authenticate");
 const userRouter = express.Router();
 userRouter.post("/register", register);
 userRouter.post("/login", login);
+
+userRouter.post("/forgot-password", forgotPassword);
+userRouter.post("/reset-password", resetPassword);
 
 userRouter.get("/get", getAllUser);
 userRouter.get("/getdetail/:id", getDetailUser);

@@ -2,6 +2,7 @@ const {User, sequelize} = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const {Op} = require("sequelize");
+const nodemailer = require("nodemailer");
 
 const getAllUser = async (req, res) => {
 	const {name} = req.query;
@@ -183,6 +184,76 @@ const getAllTrip = async (req, res) => {
 		res.status(500).send(error);
 	}
 };
+
+const forgotPassword = async (req, res) => {
+	const {email} = req.body;
+	try {
+		const user = await User.findOne({where: {email}});
+		if (!user) {
+			return res.status(404).send({message: "Email không tồn tại"});
+		}
+
+		// Tạo mã xác nhận ngẫu nhiên 6 số
+		const verificationCode = Math.floor(100000 + Math.random() * 900000);
+
+		// Lưu mã và thời gian hết hạn vào database
+		user.resetPasswordCode = verificationCode;
+		user.resetPasswordExpires = Date.now() + 600000; // 10 phút
+		await user.save();
+
+		// Cấu hình nodemailer
+		const transporter = nodemailer.createTransport({
+			service: "gmail",
+			auth: {
+				user: "tominhvuhn@gmail.com",
+				pass: "lsuabthhwbtdurtx", //
+			},
+		});
+
+		// Gửi email
+		await transporter.sendMail({
+			from: "tominhvuhn@gmail.com",
+			to: email,
+			subject: "Mã xác nhận đặt lại mật khẩu",
+			text: `Mã xác nhận của bạn là: ${verificationCode}`,
+		});
+
+		res.status(200).send({message: "Mã xác nhận đã được gửi đến email của bạn"});
+	} catch (error) {
+		res.status(500).send(error);
+	}
+};
+
+const resetPassword = async (req, res) => {
+	const {email, code, newPassword} = req.body;
+	try {
+		const user = await User.findOne({
+			where: {
+				email,
+				resetPasswordCode: code,
+				resetPasswordExpires: {[Op.gt]: Date.now()},
+			},
+		});
+
+		if (!user) {
+			return res.status(400).send({message: "Mã xác nhận không hợp lệ hoặc đã hết hạn"});
+		}
+
+		// Mã hóa mật khẩu mới
+		const salt = bcrypt.genSaltSync(10);
+		const hashPassword = bcrypt.hashSync(newPassword, salt);
+
+		// Cập nhật mật khẩu và xóa mã xác nhận
+		user.password = hashPassword;
+		user.resetPasswordCode = null;
+		user.resetPasswordExpires = null;
+		await user.save();
+
+		res.status(200).send({message: "Đặt lại mật khẩu thành công"});
+	} catch (error) {
+		res.status(500).send(error);
+	}
+};
 module.exports = {
 	register,
 	login,
@@ -193,4 +264,6 @@ module.exports = {
 	getDetailUser,
 	updateUser,
 	updateUserBooking,
+	forgotPassword,
+	resetPassword,
 };
