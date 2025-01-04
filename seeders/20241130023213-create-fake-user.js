@@ -2,16 +2,6 @@
 
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		/**
-     * Add seed commands here.
-     *
-     * Example:
-      await queryInterface.bulkInsert('People', [{
-        name: 'John Doe',
-        isBetaMember: false
-      }], {});
-      
-    */
 		await queryInterface.bulkInsert(
 			"users",
 			[
@@ -22,6 +12,9 @@ module.exports = {
 					password: "123456",
 					numberPhone: "0937750843",
 					type: "ADMIN",
+					dateOfBirth: "1990-01-01",
+					address: "123 Main Street, City",
+					gender: "Male",
 					createdAt: "2024-12-01 07:57:23",
 					updatedAt: "2024-12-01 07:57:23",
 				},
@@ -32,6 +25,9 @@ module.exports = {
 					password: "123456",
 					numberPhone: "09823212322",
 					type: "ADMIN",
+					dateOfBirth: "1992-05-15",
+					address: "456 Park Avenue, City",
+					gender: "Male",
 					createdAt: "2024-12-01 07:57:23",
 					updatedAt: "2024-12-01 07:57:23",
 				},
@@ -42,6 +38,9 @@ module.exports = {
 					password: "123456",
 					numberPhone: "09823212322",
 					type: "CLIENT",
+					dateOfBirth: "1995-08-20",
+					address: "789 Lake Road, City",
+					gender: "Female",
 					createdAt: "2024-12-01 07:57:23",
 					updatedAt: "2024-12-01 07:57:23",
 				},
@@ -52,6 +51,9 @@ module.exports = {
 					password: "123456",
 					numberPhone: "09823212322",
 					type: "CLIENT",
+					dateOfBirth: "1988-12-25",
+					address: "321 River Street, City",
+					gender: "Male",
 					createdAt: "2024-12-01 07:57:23",
 					updatedAt: "2024-12-01 07:57:23",
 				},
@@ -61,12 +63,6 @@ module.exports = {
 	},
 
 	async down(queryInterface, Sequelize) {
-		/**
-		 * Add commands to revert seed here.
-		 *
-		 * Example:
-		 * await queryInterface.bulkDelete('People', null, {});
-		 */
 		await queryInterface.bulkDelete("users", null, {});
 	},
 };

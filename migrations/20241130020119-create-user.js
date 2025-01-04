@@ -28,6 +28,18 @@ module.exports = {
 				type: Sequelize.STRING,
 				defaultValue: "CLIENT",
 			},
+			dateOfBirth: {
+				type: Sequelize.DATE,
+				allowNull: true,
+			},
+			address: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			gender: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
 			createdAt: {
 				allowNull: false,
 				type: Sequelize.DATE,

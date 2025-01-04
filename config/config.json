@@ -2,7 +2,7 @@
 	"development": {
 		"username": "root",
 		"password": "21032002",
-		"database": "online_bus_ticket",
+		"database": "test_data",
 		"host": "127.0.0.1",
 		"dialect": "mysql"
 	},

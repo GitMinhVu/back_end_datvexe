@@ -41,7 +41,7 @@ const getDetailUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
 	const {id} = req.params;
-	const {name, email, password, numberPhone, type} = req.body;
+	const {name, email, password, numberPhone, type, dateOfBirth, address, gender} = req.body;
 	try {
 		const detailUser = await User.findOne({
 			where: {
@@ -57,6 +57,9 @@ const updateUser = async (req, res) => {
 		detailUser.password = hashPassword;
 		detailUser.numberPhone = numberPhone;
 		detailUser.type = type;
+		detailUser.dateOfBirth = dateOfBirth;
+		detailUser.address = address;
+		detailUser.gender = gender;
 		await detailUser.save();
 		res.status(200).send(detailUser);
 	} catch (error) {
@@ -101,7 +104,7 @@ const deleteUser = async (req, res) => {
 	}
 };
 const register = async (req, res) => {
-	const {name, email, password, numberPhone, type} = req.body;
+	const {name, email, password, numberPhone, type, dateOfBirth, address, gender} = req.body;
 
 	const user = await User.findOne({
 		where: {
@@ -122,6 +125,9 @@ const register = async (req, res) => {
 				password: hashPassword,
 				numberPhone,
 				type,
+				dateOfBirth,
+				address,
+				gender,
 			});
 			res.status(201).send(newUser);
 		} catch (error) {
