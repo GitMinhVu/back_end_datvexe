@@ -1,4 +1,6 @@
 const authorize = (arrType) => (req, res, next) => {
+	console.log("User type:", req.user.type);
+	console.log("Allowed types:", arrType);
 	const {user} = req;
 	if (arrType.findIndex((item) => item === user.type) > -1) {
 		next();
