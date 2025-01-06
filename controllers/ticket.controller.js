@@ -582,10 +582,10 @@ const deleteTicket = async (req, res) => {
 };
 const updateTicket = async (req, res) => {
 	const {id} = req.params;
-	const {status, totalAmount, note, userId, numberPhone, name, pickUpId, dropOffId, PointpickUpId, PointdropOffId} = req.body;
+	const {status, totalAmount, note, userId, numberPhone, name, pickUpId, dropOffId, PointpickUpId, PointdropOffId, payment_method, payment_status} = req.body;
 	try {
 		await Ticket.update(
-			{status, totalAmount, note},
+			{status, totalAmount, note, payment_method, payment_status},
 			{
 				where: {
 					id,
@@ -695,6 +695,8 @@ const bookingTicket = async (req, res) => {
 				totalAmount,
 				user_id: userId,
 				tripPassengerId,
+				payment_method: req.body.payment_method,
+				payment_status: req.body.payment_status || "pending",
 			});
 			if (newTicket) {
 				const newPointPickUpTicket = await PointTicket.create({
@@ -721,22 +723,22 @@ const bookingTicket = async (req, res) => {
 					await seatUpdate.save();
 				});
 			}
-					// res.status(200).send("Đặt vé thành công")
+			// res.status(200).send("Đặt vé thành công")
 
 			return res.status(200).json({
 				success: true,
-				message: "Đặt vé thành công"
+				message: "Đặt vé thành công",
 			});
 		}
 		// res.status(404).send("Đặt vé không thành công")
 		return res.status(404).json({
 			success: false,
-			message: "Đặt vé không thành công"
+			message: "Đặt vé không thành công",
 		});
 	} catch (error) {
 		return res.status(500).json({
 			success: false,
-			message: error.message
+			message: error.message,
 		});
 	}
 };

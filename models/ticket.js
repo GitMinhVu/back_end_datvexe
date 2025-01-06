@@ -25,6 +25,9 @@ module.exports = (sequelize, DataTypes) => {
 			totalAmount: DataTypes.FLOAT,
 			user_id: DataTypes.INTEGER,
 			tripPassengerId: DataTypes.INTEGER,
+
+			payment_method: DataTypes.STRING,
+			payment_status: DataTypes.STRING,
 		},
 		{
 			sequelize,
