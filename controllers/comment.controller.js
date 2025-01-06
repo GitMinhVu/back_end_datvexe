@@ -1,14 +1,24 @@
 const {Comment, User, PassengerCarCompany, Rate} = require("../models");
 
 const createComment = async (req, res) => {
-	const {content, userId, passengerId} = req.body;
+	const {content, userId, passengerId, numberRate} = req.body;
 	try {
-		const newCmt = await Comment.create({
-			content,
+		// Create rate first
+		const rate = await Rate.create({
+			numberRate,
 			userId,
 			passengerId,
 		});
-		res.status(201).send(newCmt);
+
+		// Create comment with rate reference
+		const newComment = await Comment.create({
+			content,
+			userId,
+			passengerId,
+			rateId: rate.id,
+		});
+
+		res.status(201).send(newComment);
 	} catch (error) {
 		res.status(500).send(error);
 	}
