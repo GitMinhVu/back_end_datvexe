@@ -11,7 +11,7 @@ const createTrip = async (req, res) => {
 			},
 		});
 		if (tripFind) {
-			res.status(404).send("Trip đã tồn tại");
+			res.status(404).send("Chuyến xe đã tồn tại");
 		} else {
 			const newTrip = await Trip.create({
 				fromStation,
@@ -115,7 +115,7 @@ const updateTrip = async (req, res) => {
 				},
 			}
 		);
-		res.status(200).send("update trip thành công");
+		res.status(200).send("Cập nhật chuyến đi thành công");
 	} catch (error) {
 		res.status(500).send(error);
 	}

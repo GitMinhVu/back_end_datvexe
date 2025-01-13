@@ -1,52 +1,59 @@
-const { default: axios } = require("axios");
-
+const {default: axios} = require("axios");
 const paymentController = async (req1, res2) => {
 	const {totalAmount, passenger} = req1.body;
 	try {
-		var partnerCode = "MOMOS9RM20220403";
-		var accessKey = "FuDjG1pMnaxTUCwR";
-		var secretkey = "v1jzHpgbyyzOfrMBy33ywii1mPxqV3Er";
+		var partnerCode = "MOMO";
+		var accessKey = "F8BBA842ECF85";
+		var secretkey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
+		var requestId = partnerCode + new Date().getTime();
+		var orderId = requestId;
+
+		var orderInfo = `Đặt vé xe nhà xe ${passenger.name}`;
+		var redirectUrl = "http://localhost:3000/payment/result";
+		var ipnUrl = "http://localhost:7000/api/v1/payment/notify";
+		var amount = Math.round(totalAmount).toString();
+		var requestType = "payWithMethod";
+		var extraData = "";
+		var orderGroupId = "";
+		var autoCapture = true;
+		var lang = "vi";
 		var requestId = partnerCode + new Date().getTime();
 		var orderId = requestId;
 		var orderInfo = `Đặt vé xe nhà xe ${passenger.name}`;
-		var redirectUrl = "http://localhost:3000/"; //URL mà MoMo sẽ chuyển hướng người dùng sau khi thanh toán.
-		var ipnUrl = "https://callback.url/notify";
-		// var ipnUrl = redirectUrl = "https://webhook.site/454e7b77-f177-4ece-8236-ddf1c26ba7f8";
-		var amount = totalAmount;
-		var requestType = "captureWallet";
-		var extraData = ""; //pass empty value if your merchant does not have stores
-
-		//before sign HMAC SHA256 with format
-		//accessKey=$accessKey&amount=$amount&extraData=$extraData&ipnUrl=$ipnUrl&orderId=$orderId&orderInfo=$orderInfo&partnerCode=$partnerCode&redirectUrl=$redirectUrl&requestId=$requestId&requestType=$requestType
+		var payUrl = "";
+		setTimeout(() => {
+			if (payUrl) {
+				window.close();
+			}
+		}, 5000);
 		var rawSignature = "accessKey=" + accessKey + "&amount=" + amount + "&extraData=" + extraData + "&ipnUrl=" + ipnUrl + "&orderId=" + orderId + "&orderInfo=" + orderInfo + "&partnerCode=" + partnerCode + "&redirectUrl=" + redirectUrl + "&requestId=" + requestId + "&requestType=" + requestType;
-		//puts raw signature
-		console.log("--------------------RAW SIGNATURE----------------");
-		console.log(rawSignature);
-		//signature
+
 		const crypto = require("crypto");
-		//chữ ký mã hóa sha256
 		var signature = crypto.createHmac("sha256", secretkey).update(rawSignature).digest("hex");
-		console.log("--------------------SIGNATURE----------------");
-		console.log(signature);
-		//json object send to MoMo endpoint
-		//Tạo yêu cầu thanh toán và gửi tới MoMo
+
 		const requestBody = JSON.stringify({
 			partnerCode: partnerCode,
-			accessKey: accessKey,
+			partnerName: "Test",
+			storeId: "MomoTestStore",
 			requestId: requestId,
 			amount: amount,
 			orderId: orderId,
 			orderInfo: orderInfo,
 			redirectUrl: redirectUrl,
 			ipnUrl: ipnUrl,
-			extraData: extraData,
+			lang: lang,
 			requestType: requestType,
+			autoCapture: autoCapture,
+			extraData: extraData,
+			orderGroupId: orderGroupId,
 			signature: signature,
-			lang: "en",
+			lang: "vi",
+			payType: "web",
+			expireTime: 10000,
 		});
 
 		const options = {
-			hostname: "test-payment.momo.vn", //Địa chỉ API (dùng môi trường test là test-payment.momo.vn).
+			hostname: "test-payment.momo.vn",
 			port: 443,
 			path: "/v2/gateway/api/create",
 			method: "POST",
@@ -55,38 +62,27 @@ const paymentController = async (req1, res2) => {
 				"Content-Length": Buffer.byteLength(requestBody),
 			},
 		};
+
 		const https = require("https");
-		//Send the request and get the response
-
 		const req = https.request(options, (res) => {
-			console.log(`Status: ${res.statusCode}`);
-
-			console.log(`Headers: ${JSON.stringify(res.headers)}`);
 			res.setEncoding("utf8");
 			res.on("data", (body) => {
-				console.log("Body: ");
-				console.log(body);
-				console.log("payUrl: ");
+				console.log("Body: ", body);
 				res2.status(200).send(body);
 			});
-			res.on("end", () => {
-				console.log("No more data in response.");
-			});
 		});
+
 		req.on("error", (e) => {
-			console.log(`problem with request: ${e.message}`);
+			console.log(`Problem with request: ${e.message}`);
 		});
-	//	write data to request body
-		console.log("Sending....");
+
 		req.write(requestBody);
 		req.end();
-	} catch (error) {}
-
-	//write data to request body
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 module.exports = {
 	paymentController,
 };
-
-

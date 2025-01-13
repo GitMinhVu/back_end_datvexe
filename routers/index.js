@@ -14,6 +14,8 @@ const {tripPassengerRouter} = require("./tripPassenger.routers");
 const {userRouter} = require("./user.routers");
 const {VehiclesRouter} = require("./vehicles.routers");
 const {adminRouter} = require("./admin.routers");
+const {vnpayController} = require("../controllers/vnpay.controller");
+
 const rootRouter = express.Router();
 
 rootRouter.use("/stations", stationRouter);
@@ -31,6 +33,7 @@ rootRouter.use("/timepoint", TimePointRouter);
 rootRouter.use("/point", PointRouter);
 rootRouter.use("/payment", PaymentRouter);
 rootRouter.use("/", adminRouter);
+rootRouter.post("/payment/vnpay", vnpayController);
 
 module.exports = {
 	rootRouter,

@@ -107,33 +107,35 @@ const deleteUser = async (req, res) => {
 const register = async (req, res) => {
 	const {name, email, password, numberPhone, type, dateOfBirth, address, gender} = req.body;
 
-	const user = await User.findOne({
-		where: {
-			email,
-		},
-	});
-	if (user) {
-		res.status(404).send("Email đã tồn tại");
-	} else {
-		try {
-			//tạo một chuỗi ngầu nhiên
-			var salt = bcrypt.genSaltSync(10);
-			//mã hóa salt + password
-			var hashPassword = bcrypt.hashSync(password, salt);
-			const newUser = await User.create({
-				name,
-				email,
-				password: hashPassword,
-				numberPhone,
-				type,
-				dateOfBirth,
-				address,
-				gender,
-			});
-			res.status(201).send(newUser);
-		} catch (error) {
-			res.status(500).send(error);
+	try {
+		// Check both email and phone number existence
+		const [userByEmail, userByPhone] = await Promise.all([User.findOne({where: {email}}), User.findOne({where: {numberPhone}})]);
+
+		if (userByEmail) {
+			return res.status(404).send("Email đã tồn tại");
 		}
+
+		if (userByPhone) {
+			return res.status(404).send("Số điện thoại đã tồn tại");
+		}
+
+		var salt = bcrypt.genSaltSync(10);
+		var hashPassword = bcrypt.hashSync(password, salt);
+
+		const newUser = await User.create({
+			name,
+			email,
+			password: hashPassword,
+			numberPhone,
+			type,
+			dateOfBirth,
+			address,
+			gender,
+		});
+
+		res.status(201).send(newUser);
+	} catch (error) {
+		res.status(500).send(error);
 	}
 };
 const login = async (req, res) => {

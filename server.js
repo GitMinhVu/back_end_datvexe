@@ -16,22 +16,6 @@ var Fingerprint = require("express-fingerprint");
 const path = require("path");
 const {sequelize} = require("./models/index");
 const {rootRouter} = require("./routers");
-// const swaggerOptions = {
-//   swaggerDefinition: {
-//     info: {
-//       version: "1.0.0",
-//       title: "Booking ticket API",
-//       description: "Booking ticket API Information",
-//       contact: {
-//         name: "Amazing Developer",
-//       },
-//       servers: ["http://localhost:7000"],
-//     },
-//   },
-//   // ['.routes/*.js']
-//   apis: ["./routers/index.js"],
-// };
-// const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 //Cài ứng dụng sử dụng kiểu json
 
