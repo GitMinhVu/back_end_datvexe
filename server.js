@@ -1,13 +1,21 @@
 //express là framework nodejs để tạo server
 const express = require("express");
+const app = express();
+const httpServer = require("http").createServer(app);
+const io = require("socket.io")(httpServer, {
+	cors: {
+		origin: "*",
+		methods: ["GET", "POST"],
+	},
+});
+
+app.io = io;
+
 var cors = require("cors");
-// const swaggerJsDoc = require("swagger-jsdoc");
-// const swaggerUi = require("swagger-ui-express");
 var Fingerprint = require("express-fingerprint");
 const path = require("path");
-const { sequelize } = require("./models/index");
-const { rootRouter } = require("./routers");
-const app = express();
+const {sequelize} = require("./models/index");
+const {rootRouter} = require("./routers");
 // const swaggerOptions = {
 //   swaggerDefinition: {
 //     info: {
@@ -43,12 +51,12 @@ app.use("/api/v1", rootRouter);
 
 //Lắng nghe sự kiện kết nối
 const port = 7000;
-app.listen(port, async () => {
-  console.log("App listening on " + port);
-  try {
-    await sequelize.authenticate();
-    console.log("Connection has been established successfully.");
-  } catch (error) {
-    console.error("Unable to connect to the database:", error);
-  }
+httpServer.listen(port, async () => {
+	console.log("App listening on " + port);
+	try {
+		await sequelize.authenticate();
+		console.log("Connection has been established successfully.");
+	} catch (error) {
+		console.error("Unable to connect to the database:", error);
+	}
 });

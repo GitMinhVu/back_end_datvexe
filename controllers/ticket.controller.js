@@ -722,15 +722,20 @@ const bookingTicket = async (req, res) => {
 					seatUpdate.status = "đã đặt";
 					await seatUpdate.save();
 				});
+
+				// Thêm socket.io để gửi thông báo realtime
+				req.app.io.emit("newTicketBooked", {
+					ticketId: newTicket.id,
+					userId: userId,
+					timestamp: new Date(),
+				});
 			}
-			// res.status(200).send("Đặt vé thành công")
 
 			return res.status(200).json({
 				success: true,
 				message: "Đặt vé thành công",
 			});
 		}
-		// res.status(404).send("Đặt vé không thành công")
 		return res.status(404).json({
 			success: false,
 			message: "Đặt vé không thành công",
