@@ -60,3 +60,26 @@ httpServer.listen(port, async () => {
 		console.error("Unable to connect to the database:", error);
 	}
 });
+
+// Thêm vào sau phần khởi tạo socket.io - real-time
+io.on("connection", (socket) => {
+	//debug
+	// console.log("User connected:", socket.id);
+	socket.on("customerMessage", (data) => {
+		io.emit("messageToAdmin", {
+			...data,
+			isAdmin: false,
+		});
+	});
+
+	socket.on("adminMessage", (data) => {
+		io.emit("messageToCustomer", {
+			...data,
+			isAdmin: true,
+		});
+	});
+
+	socket.on("disconnect", () => {
+		console.log("User disconnected:", socket.id);
+	});
+});
